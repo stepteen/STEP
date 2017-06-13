@@ -22,6 +22,6 @@
         android:layout_height="match_parent"
         android:cacheColorHint="@android:color/transparent"
         android:listSelector="@android:color/transparent"
-        android:divider="@android:color/darker_gray"
+        android:divider="@color/gray1"
         android:dividerHeight="2dp" />
 </LinearLayout>
