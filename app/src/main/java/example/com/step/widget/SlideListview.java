@@ -95,9 +95,12 @@ public class SlideListview extends ListView {
                 if(-scroll >= mDeleteBtnWidth) {
                     scroll = -mDeleteBtnWidth;
                 }
-                // 重新设置leftMargin
-                mLayoutParams.leftMargin = scroll;
-                mPointChild.getChildAt(0).setLayoutParams(mLayoutParams);
+                if(mLayoutParams!=null){
+                    // 重新设置leftMargin
+                    mLayoutParams.leftMargin = scroll;
+                    mPointChild.getChildAt(0).setLayoutParams(mLayoutParams);
+                }
+
             }
 
             return true;
@@ -107,16 +110,19 @@ public class SlideListview extends ListView {
 
     // 处理action_up事件
     private void performActionUp() {
-        // 偏移量大于button的一半，则显示button
-        // 否则恢复默认
-        if(-mLayoutParams.leftMargin >= mDeleteBtnWidth / 2) {
-            mLayoutParams.leftMargin = -mDeleteBtnWidth;
-            isDeleteShown = true;
-        }else {
-            turnToNormal();
+        if(mLayoutParams!=null){
+            // 偏移量大于button的一半，则显示button
+            // 否则恢复默认
+            if(-mLayoutParams.leftMargin >= mDeleteBtnWidth / 2) {
+                mLayoutParams.leftMargin = -mDeleteBtnWidth;
+                isDeleteShown = true;
+            }else {
+                turnToNormal();
+            }
+
+            mPointChild.getChildAt(0).setLayoutParams(mLayoutParams);
         }
 
-        mPointChild.getChildAt(0).setLayoutParams(mLayoutParams);
     }
 
     /**
