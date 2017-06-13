@@ -37,9 +37,7 @@ import example.com.step.bean.MyLatlng;
 import example.com.step.bean.RunScoresBeans;
 import example.com.step.util.DlgLoading;
 
-/**
- * Created by qinghua on 2016/11/24.
- */
+
 
 public class HistoryScoresDetailActivity extends Activity implements View.OnClickListener {
 
