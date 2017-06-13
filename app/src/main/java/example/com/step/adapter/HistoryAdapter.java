@@ -14,9 +14,7 @@ import example.com.step.bean.MessageBean;
 import example.com.step.bean.RunScoresBeans;
 import example.com.step.widget.CircleImageView;
 
-/**
- * Created by qinghua on 2016/11/22.
- */
+
 
 public class HistoryAdapter extends BaseAdapter {
 
