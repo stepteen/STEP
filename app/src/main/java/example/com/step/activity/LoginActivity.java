@@ -3,16 +3,20 @@ package example.com.step.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import example.com.step.Result.ResultData;
@@ -45,6 +49,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private Button btn_login;
     private PushTestReceiver  pushTestReceiver=new PushTestReceiver();
     private EditText et_zhanghao,et_password;
+    private LinearLayout mLinearLayout;
 
     private Handler handler=new Handler()
     {
@@ -73,7 +78,26 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         initView();
     }
 
+    private void controlKeyboardLayout(final View root) {
+        root.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                adjustView(root);
+            }
+        });
+    }
+
+    private void adjustView(final View root) {
+        Rect rect = new Rect();
+        root.getWindowVisibleDisplayFrame(rect);
+        ViewGroup.LayoutParams lp;
+        lp = mLinearLayout.getLayoutParams();
+        lp.height = rect.bottom;
+        mLinearLayout.setLayoutParams(lp);
+    }
+
     private void initView() {
+        mLinearLayout= (LinearLayout) findViewById(R.id.ll_contains_login);
         mLoading = new DlgLoading((LoginActivity.this));
         btn_login= (Button) findViewById(R.id.btn_login);
         et_zhanghao= (EditText) findViewById(R.id.et_zhanghao);
@@ -84,6 +108,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         tv_zhuce.setOnClickListener(this);
         tv_forgetPw.setOnClickListener(this);
 
+        controlKeyboardLayout(findViewById(R.id.ll_step_login));
         //全透明状态栏
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window window = getWindow();
