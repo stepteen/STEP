@@ -1,15 +1,28 @@
 package example.com.step.activity;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import example.com.step.R;
 import example.com.step.fragment.FindFragment;
@@ -19,6 +32,8 @@ import example.com.step.fragment.PlaygroundFragment;
 import example.com.step.fragment.SportsFragment;
 
 public class MainViewActivity extends FragmentActivity implements View.OnClickListener {
+
+    private final int GPS_REQUEST_CODE=1;
 
     private TextView tv_playground,tv_find,tv_sports,tv_message,tv_my;
     private ImageView iv_playground,iv_find,iv_sports,iv_message,iv_my;
@@ -33,6 +48,23 @@ public class MainViewActivity extends FragmentActivity implements View.OnClickLi
         setContentView(R.layout.activity_main_view);
         initView();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        openGPSSettings();
+    }
+
+    private void setStatusBar() {
+        //全透明状态栏
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window window = getWindow();
+            // Translucent status bar
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
     }
 
     private void initView() {
@@ -241,5 +273,33 @@ public class MainViewActivity extends FragmentActivity implements View.OnClickLi
                 break;
         }
         transaction.commit();
+    }
+
+    /**
+     * GPS设置
+     */
+    private void openGPSSettings() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            int checkPermission = ContextCompat.checkSelfPermission(MainViewActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION);
+            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(MainViewActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+                ActivityCompat.requestPermissions(MainViewActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //回调，判断用户到底点击是还是否。
+        //如果同时申请多个权限，可以for循环遍历
+        if (requestCode == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            //写入你需要权限才能使用的方法
+        } else {
+            // 没有获取 到权限，从新请求，或者关闭app
+            Toast.makeText(this,"需要获得gps权限",Toast.LENGTH_SHORT).show();
+        }
     }
 }
