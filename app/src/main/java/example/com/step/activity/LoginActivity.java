@@ -1,6 +1,7 @@
 package example.com.step.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -229,6 +231,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             }
         });
     }
+
     boolean parseResultData(String resultData) {
         //先将返回值解析为ResultData
         ResultData data = ResultDataUtils.paraResult(resultData);
@@ -243,5 +246,16 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         Log.d("zqh",data.getData().toString());
         editor.commit();
         return true;
+    }
+
+    private void showSoftInput(){
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(et_zhanghao.getWindowToken(), 0); //强制隐藏键盘
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showSoftInput();
     }
 }

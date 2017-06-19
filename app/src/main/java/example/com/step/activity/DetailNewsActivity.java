@@ -2,11 +2,16 @@ package example.com.step.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import com.daimajia.numberprogressbar.NumberProgressBar;
 
 import example.com.step.R;
 import example.com.step.bean.NewsEntity;
@@ -20,6 +25,7 @@ public class DetailNewsActivity extends Activity {
 
     private NewsEntity newsEntity=new NewsEntity();
     private WebView webView_news;
+    private NumberProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +57,7 @@ public class DetailNewsActivity extends Activity {
     }
 
     private void initView() {
+        progressBar= (NumberProgressBar) findViewById(R.id.number_progress_bar);
         webView_news= (WebView) findViewById(R.id.webView_news);
         WebSettings webSettings = webView_news.getSettings();
         //设置WebView属性，能够执行Javascript脚本
@@ -68,6 +75,21 @@ public class DetailNewsActivity extends Activity {
                 view.loadUrl(url);
                 return true;
             }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+            }
+        });
+
+        webView_news.setWebChromeClient(new WebChromeClient(){
+
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                    progressBar.setProgress(newProgress);
+
+            }
+
         });
 
     }

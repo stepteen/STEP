@@ -246,7 +246,7 @@ public class LoadListViewAdapter extends BaseAdapter {
 
     private void SendLikes()
     {
-        String url="http://zqhstep.applinzi.com/synamic/user/thumb/thumb";
+        String url=ContractData.URL+"/synamic/user/thumb/thumb";
         OkHttpClient okHttpClient=new OkHttpClient();
         RequestBody body=new FormBody.Builder()
                 .add("thumb", JSON.toJSONString(thumb))
